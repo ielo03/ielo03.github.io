@@ -1,0 +1,22 @@
+name: Commit lint
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Ensure main is available
+        run: git fetch origin main --depth=1
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate commit messages
+        run: npx --yes @commitlint/cli --extends @commitlint/config-conventional --from=origin/main --to=HEAD
